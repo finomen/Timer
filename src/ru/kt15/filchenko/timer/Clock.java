@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
 import java.util.logging.Logger;
 
 class Clock {
@@ -37,7 +39,7 @@ class Clock {
 			throw new TimerCreateException("Bad state");
 		}
 	};
-	
+			
 	private long time = 0;
 	private long correction = 0;
 	private State state = State.NEW;
@@ -145,6 +147,16 @@ class Clock {
 	
 	Clock(UUID clockId) throws TimerCreateException {
 		this.id = clockId;
+		
+		try {
+			Handler handler = new FileHandler("clock-" + id.toString() + ".log", 1000, 10);
+			Logger.getLogger("Clock").addHandler(handler);
+		} catch (SecurityException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 		load();
 		worker = new Thread(new Runnable() {
 			
@@ -246,15 +258,19 @@ class Clock {
 		}
 	}
 	
-	void destroy() throws InterruptedException {
+	void destroy() {
+		Logger.getLogger("Clock").info("Destroing " + id);
 		worker.interrupt();
-		worker.join();
+		try {
+			worker.join();
+		} catch (InterruptedException e) {
+		}
 		Path state = Paths.get(".timer-" + id.toString());
 		Path backupState = Paths.get(".~timer-" + id.toString());
 		Path currentState = Paths.get(".!timer-" + id.toString());
 		state.toFile().delete();
 		backupState.toFile().delete();
-		currentState.toFile().delete();
+		currentState.toFile().delete(); 
 	}
 	
 	UUID getId() {

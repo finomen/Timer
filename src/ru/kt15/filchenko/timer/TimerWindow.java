@@ -2,6 +2,7 @@ package ru.kt15.filchenko.timer;
 
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Window;
 import java.util.UUID;
 
 import javax.swing.JFrame;
@@ -10,13 +11,14 @@ import java.awt.BorderLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
 
 import ru.kt15.filchenko.timer.Clock.State;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class TimerWindow {
 
@@ -126,6 +128,39 @@ public class TimerWindow {
 		frmTimer.setTitle(c.getId().toString());
 		frmTimer.setBounds(100, 100, 301, 113);
 		frmTimer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		frmTimer.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent arg0) {			
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent arg0) {
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent arg0) {				
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent arg0) {				
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				c.destroy();
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+				
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent arg0) {
+			}
+		});
 
 		JPanel panel = new JPanel();
 		frmTimer.getContentPane().add(panel, BorderLayout.WEST);
